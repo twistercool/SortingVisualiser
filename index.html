@@ -1,36 +1,15 @@
 <!DOCTYPE html>
 <html>
-    <header>
-        <label> This Is The Sorting Visualiser</label>
-    </header>
+    <head>
+        <label>This Is The Sorting Visualiser</label>
+        <button id="shuffleBtn" onclick="newRandomCanvas()">Reshuffle</button>
+        <button id="swap2values" onClick="swap2Random()">Swap 2 Random Values</button>
+    </head>
 
-    <canvas id="myChart" width="400" height="400"></canvas>
+    <div id="graph-container">
+        <canvas id="myCanvas" width="200" height="200"></canvas>
+    </div>
+    
 
-    <script defer>
-        let canvas = document.getElementById('MyChart');
-        let chart = new Chart(canvas, {
-            type: 'bar',
-            data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green'],
-                datasets: [{
-                    label: '# of votes',
-                    data: [13, 14, 6, 2],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2'
-                    ]
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
-            }
-        });
-
-
-    </script>
+    <script src="charting.js" defer></script>
 </html>
