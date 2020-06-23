@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <header>
+        <label> This Is The Sorting Visualiser</label>
+    </header>
+
+    <canvas id="myChart" width="400" height="400"></canvas>
+
+    <script defer>
+        let canvas = document.getElementById('MyChart');
+        let chart = new Chart(canvas, {
+            type: 'bar',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green'],
+                datasets: [{
+                    label: '# of votes',
+                    data: [13, 14, 6, 2],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2'
+                    ]
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+
+    </script>
+</html>

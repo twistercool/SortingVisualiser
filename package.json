@@ -1,0 +1,15 @@
+{
+  "name": "sortingvisualiser",
+  "version": "1.0.0",
+  "description": "Visualises sorting algorithms",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chart.js": "^2.9.3",
+    "electron": "^9.0.5"
+  }
+}
