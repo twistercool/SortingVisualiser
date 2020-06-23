@@ -52,7 +52,7 @@ function addData(chart, label, data) {
         dataset.backgroundColor.push('rgb(255, 255, 255)');
         dataset.data.push(data);
     });
-    chart.update();
+    // chart.update(); //it's probably not useful but who knows
 }
 
 function removeData(chart) {
@@ -65,50 +65,113 @@ function removeData(chart) {
 
 
 function displayArray(){
+    clearCanvas();
     for (let i = 0; i < arr.length; ++i){
         let elem = arr[i];
         addData(chart, `${i}`, `${arr[i]}`);
     }
-    highlightBarRed(20);
-    highlightBarGreen(35);
-    chart.update(300); //so that the animation is fast
+    chart.update(0); //so that the animation is fast
 }
 
 function newRandomCanvas(){
+    clearCanvas();
+    displayRandomData();
+}
+
+function clearCanvas(){
     let element = document.getElementById('myCanvas');
     element.parentNode.removeChild(element);
     $('#graph-container').append('<canvas id="myCanvas" width="200" height="200"></canvas>');
     ctx = document.querySelector('#myCanvas');
     chart = chartInit(ctx);
-    displayRandomData();
-};
+}
 
 function displayRandomData(){
-    arr = randomiseArray(100);
+    arr = randomiseArray(50);
     displayArray();
 }
 
 function swap2Random(){
-    swapTwoValues(Math.ceil(Math.random()*100), Math.ceil(Math.random()*100));
+    swapTwoValues(Math.floor(Math.random()*arr.length), Math.floor(Math.random()*arr.length));
 }
 
 function swapTwoValues(index1, index2){
-    const temp = chart.data.datasets[0].data[index1];
-    chart.data.datasets[0].data[index1] = chart.data.datasets[0].data[index2];
-    chart.data.datasets[0].data[index2] = temp;
-    chart.update(200);
+    const tmp = arr[index1];
+    arr[index1] = arr[index2];
+    arr[index2] = tmp;
+    displayArray();
+    chart.update(0);
 }
 
 function highlightBarRed(index){
     if (index >= 0 && index < arr.length){
         chart.data.datasets[0].backgroundColor[index] = 'rgb(255, 99, 132)';
+        chart.update(0);
     }
 }
 
 function highlightBarGreen(index){
     if (index >= 0 && index < arr.length){
         chart.data.datasets[0].backgroundColor[index] = 'rgb(45, 255, 23)';
+        chart.update(0);
     }
 }
+
+function highlightBarBlack(index){
+    if (index >= 0 && index < arr.length){
+        chart.data.datasets[0].backgroundColor[index] = 'rgb(0, 0, 0)';
+        chart.update(0);
+    }
+}
+
+async function sortSelection(){
+    //represent currentlysorted array to the left and 
+    //unsorted array to the right, forming one big array
+    let sortedArr = [];
+    let unsortedArr = arr;
+    for (let i = 0; i < arr.length; ++i){
+        //for every element in the unsorted array that'll be sorted
+        //it'll be compared to all other elements before choosing the next smallest
+        highlightBarBlack(i-1);
+        let indexCurrentSmallest = 0;
+        for (let j = 0; j < unsortedArr.length; ++j){
+            highlightBarGreen(i + j);
+            if (unsortedArr[j] < unsortedArr[indexCurrentSmallest]){
+                highlightBarGreen(indexCurrentSmallest + i);
+                indexCurrentSmallest = j;
+                highlightBarRed(indexCurrentSmallest + i);
+            }
+            await sleep(1);
+        }
+        sortedArr.push(unsortedArr[indexCurrentSmallest]);
+        unsortedArr.splice(indexCurrentSmallest, 1);
+        arr = sortedArr.concat(unsortedArr);
+        displayArray();
+        await sleep(1);
+    }
+    displayArray();
+}
+
+async function sortInsertion(){
+    let sortedArr = [];
+    let unsortedArr = arr;
+    for (let i = 0; i < arr.length; ++i){
+        //for every value in arr, it'll check where to add in the unsorted array
+        
+    }
+}
+
+const sleep = milliseconds => {
+    return new Promise(wait => setTimeout(wait, milliseconds));
+};
+
+function wait(ms)
+{
+    var d = new Date();
+    var d2 = null;
+    do { d2 = new Date(); }
+    while(d2-d < ms);
+}
+
 
 displayRandomData();
