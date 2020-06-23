@@ -157,7 +157,7 @@ async function sortInsertion(){
     let unsortedArr = arr;
     for (let i = 0; i < arr.length; ++i){
         //for every value in arr, it'll check where to add in the unsorted array
-        
+
     }
 }
 
