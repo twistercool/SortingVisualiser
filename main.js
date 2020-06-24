@@ -1,8 +1,9 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, Menu } = require('electron')
 
+let mainWindow;
 function createWindow () {
   // Create the browser window.
-  let win = new BrowserWindow({
+  let mainWindow = new BrowserWindow({
     width: 500,
     height: 600,
     webPreferences: {
@@ -10,8 +11,27 @@ function createWindow () {
     }
   })
 
+  // const mainMenu = Menu.buildFromTemplate(menuTemplate);
+  // Menu.setApplicationMenu(mainMenu);
+
   // and load the index.html of the app.
-  win.loadFile('index.html')
+  mainWindow.loadFile('index.html')
 }
 
-app.whenReady().then(createWindow)
+app.whenReady().then(createWindow);
+
+const menuTemplate = [
+  {
+    label: 'Reload',
+    click(){
+      app.relaunch();
+      app.exit();
+    }
+  },
+  {
+    label: 'Dev tools',
+    click(){
+      mainWindow.webContents.openDevTools();
+    }
+  }
+];
