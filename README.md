@@ -7,3 +7,5 @@ To install, you have to have npm and nodejs:
 Anytime you want to run it, simple go to the directory and type npm start.
 
 I might deploy it as a website in the future, but chart,js is really not made for that, and I'd start the code from scratch, as it's very unoptimised performance-wise.
+
+Currently, I have implemented the visualisation of selection sort, insertion sort, merge sort and stalin sort (destroys the elements that are unsorted).
