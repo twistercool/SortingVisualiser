@@ -2,6 +2,7 @@ const Chart = require('chart.js');
 const $ = require('jquery');
 
 let arr = [];
+let nbElements = 50;
 
 let ctx = document.getElementById("myCanvas");
 let chart = chartInit(ctx);
@@ -42,7 +43,7 @@ function randomiseArray(nbOfElements){
     for (let i = 0; i < nbOfElements; ++i){
         randomArray.push(Math.ceil(Math.random() * 100));
     }
-    return randomArray
+    return randomArray;
 }
 
 function addData(chart, label, data) {
@@ -55,13 +56,22 @@ function addData(chart, label, data) {
     // chart.update(); //it's probably not useful but who knows
 }
 
-function removeData(chart) {
-    chart.data.labels.pop();
-    chart.data.datasets.forEach((dataset) => {
-        dataset.data.pop();
-    });
-    chart.update();
+const form = document.forms['myForm'];
+form.addEventListener('submit', () => {
+    event.preventDefault();
+    const newArraySize = document.querySelector('#newArraySize').value;
+    nbElements = newArraySize;
+    displayRandomData();
+    document.getElementById('myForm').reset();
+});
+
+function setArraySize(nb){
+    if (typeof nb === 'number'){
+        nbElements = nb;
+        displayRandomData();
+    }
 }
+
 
 
 function displayArray(){
@@ -87,7 +97,7 @@ function clearCanvas(){
 }
 
 function displayRandomData(){
-    arr = randomiseArray(50);
+    arr = randomiseArray(nbElements);
     displayArray();
 }
 
@@ -157,8 +167,41 @@ async function sortInsertion(){
     let unsortedArr = arr;
     for (let i = 0; i < arr.length; ++i){
         //for every value in arr, it'll check where to add in the unsorted array
-
+        let currentElem = unsortedArr[0];
+        highlightBarBlack(i);
+        await sleep(1);
+        for (let j = 0; j < sortedArr.length; ++j){
+            highlightBarGreen(j);
+            await sleep(1);
+            if (sortedArr[j] > currentElem){
+                if (j === 0){
+                    sortedArr.unshift(currentElem);
+                }
+                else {
+                    sortedArr.splice(j, 0, currentElem);
+                }
+                unsortedArr.shift();
+                arr = sortedArr.concat(unsortedArr);
+                displayArray();
+                highlightBarRed(j);
+                await sleep(1);
+                break;
+            }
+            if (j === sortedArr.length - 1 && currentElem >= sortedArr[j]){
+                sortedArr.push(currentElem);
+                unsortedArr.shift();
+                arr = sortedArr.concat(unsortedArr);
+                displayArray();
+                break;
+            }
+        }
+        if (i === 0) {
+            sortedArr.push(currentElem);
+            unsortedArr.shift();
+            arr = sortedArr.concat(unsortedArr);
+        }
     }
+    displayArray();
 }
 
 const sleep = milliseconds => {
