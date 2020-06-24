@@ -72,8 +72,6 @@ function setArraySize(nb){
     }
 }
 
-
-
 function displayArray(){
     clearCanvas();
     for (let i = 0; i < arr.length; ++i){
@@ -110,7 +108,6 @@ function swapTwoValues(index1, index2){
     arr[index1] = arr[index2];
     arr[index2] = tmp;
     displayArray();
-    chart.update(0);
 }
 
 function highlightBarRed(index){
@@ -204,17 +201,106 @@ async function sortInsertion(){
     displayArray();
 }
 
-const sleep = milliseconds => {
-    return new Promise(wait => setTimeout(wait, milliseconds));
-};
-
-function wait(ms)
-{
-    var d = new Date();
-    var d2 = null;
-    do { d2 = new Date(); }
-    while(d2-d < ms);
+async function sortStalin(){
+    //removes the unordered elements
+    for (let i = 0; i < arr.length-1; ++i){
+        highlightBarRed(i);
+        await sleep(1);
+        if (arr[i] > arr[i+1]){
+            arr.splice(i+1, 1);
+            i--;
+            displayArray();
+            highlightBarRed(i);
+            await sleep(1);
+        }
+    }
+    displayArray();
 }
+
+async function displayMerge(arrayArr){
+    if (arr.length < 12) {
+        arr = auxMergeSort(arr);
+        displayArray();
+        return;
+    }
+    if(Math.log2(arrayArr.length) % 1 === 0){
+        let currentLength = 2;
+        while(currentLength <=  arr.length){
+            let tempArr = arrayArr.filter(array => {
+                return array.length === currentLength;
+            });
+            let mergedArr = [].concat(...tempArr);
+            arr = mergedArr;
+            displayArray();
+            await sleep(100);
+            currentLength *= 2;
+        }
+    }
+    else {
+        let currentdepth = Math.ceil(Math.log(arr.length) / Math.log(2))-1; //depth of the tree minus 1 because I don't do units
+        while(currentdepth >= 0){
+            console.log(mergeArr);
+            let tempArr = arrayArr.filter(x => {
+                return x[1] === currentdepth;
+            });
+            console.log(tempArr);
+            let dataArr = []
+            for (let i=0;i<tempArr.length;++i){
+                dataArr.push(tempArr[i][0]);
+            }
+            console.log(dataArr);
+            let mergedArr = [].concat(...dataArr);
+            arr = mergedArr;
+            displayArray();
+            await sleep(100);
+            currentdepth--;
+        }
+    }
+    displayArray();
+}
+
+let mergeArr = [];
+
+function sortMerge(){
+    mergeArr = [[auxMergeSort(arr, 0),0]];
+    auxMergeSort(arr, 0);
+    displayMerge(mergeArr);
+}
+
+function auxMergeSort(inputArr, depth){
+    if (inputArr.length <= 1) return inputArr;
+
+    const mid = Math.floor(inputArr.length/2);
+
+    const left = inputArr.slice(0, mid);
+    const right = inputArr.slice(mid);
+
+    return merge(auxMergeSort(left, depth+1), auxMergeSort(right, depth+1), depth);
+}
+
+function merge(leftArr, rightArr, depth){
+    let returnArr = [], leftIndex=0, rightIndex=0;
+
+    while(leftIndex < leftArr.length && rightIndex < rightArr.length){
+        if (leftArr[leftIndex] < rightArr[rightIndex]){
+            returnArr.push(leftArr[leftIndex]);
+            leftIndex++;
+        } 
+        else{
+            returnArr.push(rightArr[rightIndex]);
+            rightIndex++;
+        }
+    }
+
+    mergeArr.push([leftArr, depth+1]);
+    mergeArr.push([rightArr, depth+1]);
+
+    return returnArr.concat(leftArr.slice(leftIndex)).concat(rightArr.slice(rightIndex));
+}
+
+const sleep = milliseconds => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+};
 
 
 displayRandomData();
