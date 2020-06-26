@@ -46,14 +46,14 @@ function randomiseArray(nbOfElements){
     return randomArray;
 }
 
-function addData(chart, label, data) {
-    chart.data.labels.push(label);
-    chart.data.datasets.forEach((dataset) => {
+function addData(InputChart, label, data) {
+    InputChart.data.labels.push(label);
+    InputChart.data.datasets.forEach((dataset) => {
         dataset.borderColor.push('rgb(0, 0, 0)');
         dataset.backgroundColor.push('rgb(255, 255, 255)');
         dataset.data.push(data);
     });
-    // chart.update(); //it's probably not useful but who knows
+    // InputChart.update(); //it's probably not useful but who knows
 }
 
 const form = document.forms['myForm'];
@@ -66,7 +66,7 @@ form.addEventListener('submit', () => {
 });
 
 function setArraySize(nb){
-    if (typeof nb === 'number'){
+    if (typeof nb === 'number' && nb > 0){
         nbElements = nb;
         displayRandomData();
     }
@@ -75,7 +75,6 @@ function setArraySize(nb){
 function displayArray(){
     clearCanvas();
     for (let i = 0; i < arr.length; ++i){
-        let elem = arr[i];
         addData(chart, `${i}`, `${arr[i]}`);
     }
     chart.update(0); //so that the animation is fast
